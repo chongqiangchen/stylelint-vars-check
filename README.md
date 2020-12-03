@@ -12,13 +12,19 @@
         plugins: ['stylelint-vars-check'],
         rules: {
             'vars/font-size-variables': [
-                ['../src/styles/font-size.less'], 
+                {
+                    paths: ['./src/styles/font-size.less'], 
+                    styleType: 'less'
+                },
                 {
                     "severity": "warning" // 警告或者错误自己选择
                 }
             ],
             'vars/color-variables': [
-                ['../src/styles/color.less'], 
+                {
+                   paths: ['./src/styles/color.less'], 
+                   styleType: 'less'
+                },
                 {
                     "severity": "warning"
                 }
