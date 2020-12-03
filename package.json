@@ -16,8 +16,9 @@
     "sass-vars",
     "font-size-vars"
   ],
-  "author": "",
+  "author": "<chongqiangchen@gmail.com>",
   "license": "ISC",
+  "repository": "https://github.com/chongqiangchen/stylelint-vars-check.git",
   "dependencies": {
     "css-color-names": "^1.0.1",
     "hex-color-regex": "^1.1.0",
