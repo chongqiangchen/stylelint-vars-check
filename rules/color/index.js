@@ -51,6 +51,7 @@ function rule(colorFile) {
     sassVars = execSync(`node ${parseVarsPath} ${colorFile}`).toString('UTF-8');
   }
   const colorInfo = JSON.parse(sassVars);
+
   return (root, result) => {
     const validOptions = validateOptions(result, ruleName, {
       actual: [colorFile],

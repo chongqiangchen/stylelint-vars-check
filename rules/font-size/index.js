@@ -3,7 +3,7 @@ const path = require('path');
 const stylelint = require('stylelint');
 const { execSync } = require('child_process');
 const { FONT_SIZE_VAR_REGEXP } = require('../utils/RegExp');
-const { getFontSizeMap, getFontSizeVarMessage } = require('./font-size-var');
+const { getFontSizeMap, getFontSizeVarMessage } = require('./utils');
 
 const { report, ruleMessages, validateOptions } = stylelint.utils;
 
