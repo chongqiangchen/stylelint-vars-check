@@ -79,7 +79,7 @@ class SassVars {
       vars: { global }
     } = sassExtract.renderSync({ data: context });
     // 将获取到的[{type: SassColor | SassNumber, value ,...}, ...]转成{key: value}
-    return SassVars.parseChunks(global);
+    return JSON.stringify(SassVars.parseChunks(global));
   }
 }
 
