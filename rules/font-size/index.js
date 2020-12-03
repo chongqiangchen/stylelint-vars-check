@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const path = require('path');
 const stylelint = require('stylelint');
-const { isTestEnv } = require('../utils/env');
+const { isTestEnv } = require('../../utils/env');
 const { execSync } = require('child_process');
 const { FONT_SIZE_VAR_REGEXP } = require('../utils/RegExp');
 const { getFontSizeMap, getFontSizeVarMessage } = require('./utils');
@@ -23,7 +23,8 @@ const messages = ruleMessages(ruleName, {
  * @param {Array} paths ['path']
  * @param {String} styleType less | sass
  */
-function rule(paths, styleType) {
+function rule(inputs, options) {
+  const { paths, styleType } = inputs;
   const parseVarsPath = path.resolve(__dirname, '../../extract-vars/index.js');
   if (!styleVars || isTestEnv) {
     styleVars = execSync(`node ${parseVarsPath} ${paths} ${styleType}`).toString('UTF-8');
@@ -40,14 +41,12 @@ function rule(paths, styleType) {
       result,
       ruleName,
       {
-        actual: paths,
-        possible: [_.isString],
-        optional: true
+        actual: inputs,
+        possible: {
+          paths: [_.isString],
+          styleType: ['less', 'sass', 'scss']
+        }
       },
-      {
-        actual: styleType,
-        possible: ['less', 'sass', 'scss']
-      }
     );
     if (!validOptions) {
       console.error('请确认输入参数是否错误');

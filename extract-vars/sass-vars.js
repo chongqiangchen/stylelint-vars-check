@@ -3,8 +3,10 @@
 const sassExtract = require('sass-extract');
 const path = require('path');
 const _ = require('lodash');
+const { isTestEnv } = require('../utils/env');
 
-const rootPath = path.resolve(__dirname, '../../');
+const testRootPath = path.resolve(__dirname, '../../');
+const prodRootPath = path.resolve(__dirname, '../../../');
 
 class SassVars {
   static parseTypeToValue(chunk) {
@@ -63,22 +65,18 @@ class SassVars {
   }
 
   static extract(files) {
-    // 拿到文件内容
     const context = files
       .map(file => {
-        const filePath = path.join(rootPath, file);
+        const filePath = isTestEnv ? path.resolve(testRootPath, file) : path.resolve(prodRootPath, file);
         const data = require('fs').readFileSync(filePath, {
           encoding: 'UTF-8'
         });
-        // 忽略 @import 语法
         return data.replace(/^@import[^\n]+;/gi, '');
       })
       .join('\r\n');
-    // 利用sassExtract插件解析sass变量， {type: SassColor | SassNumber, value ,...}
     const {
       vars: { global }
     } = sassExtract.renderSync({ data: context });
-    // 将获取到的[{type: SassColor | SassNumber, value ,...}, ...]转成{key: value}
     return JSON.stringify(SassVars.parseChunks(global));
   }
 }

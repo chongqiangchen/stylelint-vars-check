@@ -4,7 +4,9 @@ const rules = require('..');
 const rule = rules['font-size'];
 testRule(rule, {
   ruleName: rule.ruleName,
-  config: [['./stylelint-vars-check/test/font-size.scss'], 'scss'],
+  config: [{ paths: ['./stylelint-vars-check/test/font-size.scss'], styleType: 'scss' }, {
+    'severity': 'warning'
+  }],
   accept: [
     {
       code: 'a { font-size: $font-size-xl;}'
@@ -32,7 +34,9 @@ testRule(rule, {
 
 testRule(rule, {
   ruleName: rule.ruleName,
-  config: [['./stylelint-vars-check/test/font-size.less'], 'less'],
+  config: [{ paths: ['./stylelint-vars-check/test/font-size.less'], styleType: 'less' }, {
+    'severity': 'warning'
+  }],
   accept: [
     {
       code: 'a { font-size: @font-size-xl;}'

@@ -1,15 +1,16 @@
-var less = require('less');
-var _ = require('lodash');
-var path = require('path');
-var lessToJs = require('less-vars-to-js');
+let less = require('less');
+let _ = require('lodash');
+let path = require('path');
+let lessToJs = require('less-vars-to-js');
+const { isTestEnv } = require('../utils/env');
 
-const rootPath = path.resolve(__dirname, '../../');
+const testRootPath = path.resolve(__dirname, '../../');
+const prodRootPath = path.resolve(__dirname, '../../../');
 
-// Auxiliary functions
 function getOutput(files) {
   const context = files
     .map(file => {
-      const filePath = path.join(rootPath, file);
+      const filePath = isTestEnv ? path.resolve(testRootPath, file) : path.resolve(prodRootPath, file);
       const data = require('fs').readFileSync(filePath, {
         encoding: 'UTF-8'
       });

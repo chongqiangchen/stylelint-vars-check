@@ -6,7 +6,7 @@ const { execSync } = require('child_process');
 const path = require('path');
 const isColorProp = require('./is-color-prop');
 const stylelint = require('stylelint');
-const { isTestEnv } = require('../utils/env');
+const { isTestEnv } = require('../../utils/env');
 const { report, ruleMessages, validateOptions } = stylelint.utils;
 
 const ruleName = 'vars/color-variables';
@@ -46,10 +46,11 @@ const messages = ruleMessages(ruleName, {
   }
 });
 
-function rule(colorFile, styleType) {
+function rule(inputs) {
+  const {paths, styleType} = inputs;
   const parseVarsPath = path.resolve(__dirname, '../../extract-vars/index.js');
   if (!sassVars || isTestEnv) {
-    sassVars = execSync(`node ${parseVarsPath} ${colorFile} ${styleType}`).toString('UTF-8');
+    sassVars = execSync(`node ${parseVarsPath} ${paths} ${styleType}`).toString('UTF-8');
   }
   const colorInfo = JSON.parse(sassVars);
 
@@ -58,13 +59,12 @@ function rule(colorFile, styleType) {
       result,
       ruleName,
       {
-        actual: [colorFile],
-        possible: [_.isArray]
+        actual: inputs,
+        possible: {
+          paths: [_.isString],
+          styleType: ['less', 'sass', 'scss']
+        }
       },
-      {
-        actual: styleType,
-        possible: ['less', 'sass', 'scss']
-      }
     );
     if (!validOptions) {
       return;

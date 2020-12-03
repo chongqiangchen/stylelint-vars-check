@@ -5,8 +5,7 @@ const rule = rules['color-variables'];
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [
-    ['./stylelint-vars-check/test/color.less'],
-    'less',
+    { paths: ['./stylelint-vars-check/test/color.less'], styleType: 'less' },
     {
       severity: 'warning'
     }
@@ -32,8 +31,7 @@ testRule(rule, {
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [
-    ['./stylelint-vars-check/test/color.scss'],
-    'scss',
+    { paths: ['./stylelint-vars-check/test/color.scss'], styleType: 'scss' },
     {
       severity: 'warning'
     }
