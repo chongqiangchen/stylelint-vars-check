@@ -1,6 +1,6 @@
 {
   "name": "stylelint-vars-check",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "description": "利用stylelint检查sass,less变量，并通过vscode stylelint插件，webStorm stylelint插件进行提示",
   "main": "index.js",
   "scripts": {
