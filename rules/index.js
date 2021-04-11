@@ -1,4 +1,5 @@
 module.exports = {
   'font-size': require('./font-size'),
-  'color-variables': require('./color')
+  'color-check': require('./color'),
+  'main-check': require('./main')
 };

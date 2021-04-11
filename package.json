@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test node ./rules/index.test.js",
-    "publish:patch": "npm version patch && npm publish"
+    "publish:patch": "npm version patch && npm publish",
+    "publish:preminor": "npm version minor"
   },
   "keywords": [
     "stylelint-plugin",

@@ -5,7 +5,7 @@ const path = require('path');
 const _ = require('lodash');
 const { isTestEnv } = require('../utils/env');
 
-const testRootPath = path.resolve(__dirname, '../../');
+const testRootPath = path.resolve(__dirname, '../');
 const prodRootPath = path.resolve(__dirname, '../../../');
 
 class SassVars {
