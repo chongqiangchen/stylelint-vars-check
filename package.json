@@ -1,11 +1,12 @@
 {
   "name": "stylelint-vars-check",
-  "version": "0.0.5",
+  "version": "0.1.0-alpha.0",
   "description": "利用stylelint检查sass,less变量，并通过vscode stylelint插件，webStorm stylelint插件进行提示",
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test node ./rules/index.test.js",
-    "publish:patch": "npm version patch && npm publish"
+    "publish:patch": "npm version patch && npm publish",
+    "publish:preminor": "npm version minor"
   },
   "keywords": [
     "stylelint-plugin",

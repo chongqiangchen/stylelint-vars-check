@@ -49,4 +49,67 @@ $font-sm: 14px;
     }
 ```
 
-> 注意：因为时间有限，font-size的匹配暂时只针对@font和$font前缀，之后将会交由用户自己输入
+## 预发布功能：
+
+1. 新增全变量匹配（除color相关，继续使用之前处理方案）功能，只需要提供一个less/sass变量文件，即可在全局相对应的地方提示
+2. 重构font-size匹配，合并到全变量匹配中
+
+## 支持的CSS样式
+
+*font*
+
+- [x] font-size
+- [ ] font-style
+- [ ] line-height
+- [ ] font-weight
+- [ ] font-variant
+- [ ] text-transform
+- [ ] text-decoration
+- [ ] font-family
+
+*background*
+
+- [ ] backround
+- [ ] background-color
+- [ ] background-image
+- [ ] background-repeat
+- [ ] background-attachment
+- [ ] background-position
+
+*block*
+
+- [ ] letter-spacing
+- [ ] text-align
+- [ ] text-indent 缩进
+- [ ] vertical-align
+- [ ] word-spacing
+- [ ] display
+
+*box*
+
+- [ ] width
+- [x] height
+- [ ] padding(top, right, bottom, left)
+- [ ] float
+- [ ] margin(top, right, bottom, left)
+
+*border*
+
+- [ ] border
+- [ ] border-style
+- [ ] border-width
+- [ ] border-color
+
+*list*
+
+- [ ] list-style-type
+- [ ] list-style-position
+- [ ] list-style-image
+
+*position*
+
+- [ ] position(left, right, bottom, top)
+- [ ] visibility
+- [ ] overflow
+- [ ] clip
+
