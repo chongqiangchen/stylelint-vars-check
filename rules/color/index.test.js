@@ -1,11 +1,11 @@
 const testRule = require('stylelint-test-rule-tape');
 
 const rules = require('..');
-const rule = rules['color-check'];
+const rule = rules['color-variables'];
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [
-    { paths: ['./test/color.less'], styleType: 'less' },
+    { paths: ['./stylelint-vars-check/test/color.less'], styleType: 'less' },
     {
       severity: 'warning'
     }
@@ -31,7 +31,7 @@ testRule(rule, {
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [
-    { paths: ['./test/color.scss'], styleType: 'scss' },
+    { paths: ['./stylelint-vars-check/test/color.scss'], styleType: 'scss' },
     {
       severity: 'warning'
     }
