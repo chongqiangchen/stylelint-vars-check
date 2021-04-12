@@ -4,7 +4,7 @@
   "description": "利用stylelint检查sass,less变量，并通过vscode stylelint插件，webStorm stylelint插件进行提示",
   "main": "index.js",
   "scripts": {
-    "test": "cross-env NODE_ENV=test node ./rules/index.test.js",
+    "test": "cross-env NODE_ENV=test node ./rules/main/index.test.js",
     "publish:patch": "npm version patch && npm publish",
     "publish:preminor": "npm version minor"
   },
@@ -37,6 +37,7 @@
     "cross-env": "^7.0.3",
     "husky": "^4.3.0",
     "lint-staged": "^10.4.2",
+    "md5": "^2.3.0",
     "prettier": "^2.2.1",
     "stylelint-test-rule-tape": "^0.2.0"
   },

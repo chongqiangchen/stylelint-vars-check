@@ -1,10 +1,10 @@
 const _ = require('lodash');
 const path = require('path');
 const stylelint = require('stylelint');
-const { isTestEnv } = require('../../utils/env');
 const { storeConfig, isSupportStyleKey, styleKeyAndVarsMap } = require('../utils/config');
 const { execSync } = require('child_process');
 const StyleKeys = require('./style-key');
+const { isFilesChange } = require('../utils/fs-change');
 
 const { report, ruleMessages, validateOptions } = stylelint.utils;
 
@@ -26,7 +26,7 @@ function rule(inputs, options) {
   const { paths, styleType, ruleConfig } = inputs;
   const parseVarsPath = path.resolve(__dirname, '../../extract-vars/index.js');
 
-  if (!styleVarString || isTestEnv) {
+  if (isFilesChange(paths)) {
     styleVarString = execSync(`node ${parseVarsPath} ${paths} ${styleType}`).toString('UTF-8');
 
     try {
