@@ -23,7 +23,7 @@ $font-sm: 14px;
 ## 使用
 
 ```text
-// stylelint.config.js
+// stylelint.store.js
     {
         plugins: ['stylelint-vars-check'],
         rules: {

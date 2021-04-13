@@ -1,6 +1,8 @@
 const _ = require('lodash');
 
 class Height {
+  matchRule = ['height', 'size', 'height-size', 'hgt', 'ht'];
+
   needNotice(value) {
     return !/\@|\$/.test(value);
   }

@@ -15,7 +15,6 @@ testRule(rule, {
       code: 'a { padding: 16px;}'
     }
   ],
-
   reject: [
     {
       code: 'a { height: 16px; }',
@@ -25,9 +24,12 @@ testRule(rule, {
       code: 'a { font-size: 14px; }',
       message: '14px 建议替换成 $font-size-base 变量 (vars/check)'
     },
+    {
+      code: 'a {line-height: 2px}',
+      message: '2px 建议替换成 $line-height-base 变量 (vars/check)'
+    }
   ]
 });
-
 
 testRule(rule, {
   ruleName: rule.ruleName,
@@ -42,7 +44,6 @@ testRule(rule, {
       code: 'a { padding: 16px;}'
     }
   ],
-
   reject: [
     {
       code: 'a { height: 16px; }',
@@ -52,5 +53,22 @@ testRule(rule, {
       code: 'a { font-size: 14px; }',
       message: '14px 建议替换成 @font-size-base 变量 (vars/check)'
     },
+    {
+      code: 'a {line-height: 2px}',
+      message: '2px 建议替换成 @line-height-base 变量 (vars/check)'
+    }
   ]
+});
+
+// 测试ruleConfig replace方案
+testRule(rule, {
+  ruleName: rule.ruleName,
+  config: [{ paths: ['./test/more.scss'], styleType: 'scss', ruleConfig: { 'font-size': ['test'] } }, {
+    'severity': 'warning'
+  }],
+  accept: [
+    {
+      code: 'a { font-size: 14px; }',
+    }
+  ],
 });

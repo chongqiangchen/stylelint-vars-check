@@ -1,10 +1,10 @@
 const _ = require('lodash');
 const path = require('path');
 const stylelint = require('stylelint');
-const { storeConfig, isSupportStyleKey, styleKeyAndVarsMap } = require('../utils/config');
+const { storeConfig, storeMatchRules, isSupportStyleKey, styleKeyAndVarsMap } = require('./utils/store');
 const { execSync } = require('child_process');
 const StyleKeys = require('./style-key');
-const { isFilesChange } = require('../utils/fs-change');
+const { isFilesChange } = require('./utils/fs-change');
 
 const { report, ruleMessages, validateOptions } = stylelint.utils;
 
@@ -19,19 +19,20 @@ const messages = ruleMessages(ruleName, {
 
 /**
  * 规则
- * @param {Array} paths ['path']
- * @param {String} styleType less | sass
+ * @param inputs :  paths: ['path'], styleType: less | sass, ruleConfig: [] | {value: [], mergeRule}
  */
-function rule(inputs, options) {
+function rule(inputs) {
   const { paths, styleType, ruleConfig } = inputs;
   const parseVarsPath = path.resolve(__dirname, '../../extract-vars/index.js');
 
-  if (isFilesChange(paths)) {
+  const matchRuleIsChange = storeMatchRules(ruleConfig);
+
+  if (isFilesChange(paths) || matchRuleIsChange) {
     styleVarString = execSync(`node ${parseVarsPath} ${paths} ${styleType}`).toString('UTF-8');
 
     try {
       const styleVars = JSON.parse(styleVarString);
-      storeConfig(ruleConfig || {}, styleVars);
+      storeConfig(styleVars);
     } catch (error) {
     }
   }
@@ -42,7 +43,8 @@ function rule(inputs, options) {
       actual: inputs,
       possible: {
         paths: [_.isString],
-        styleType: ['less', 'sass', 'scss']
+        styleType: ['less', 'sass', 'scss'],
+        ruleConfig: [_.isObject]
       }
     });
     if (!validOptions) {

@@ -1,9 +1,7 @@
-const FontSize = require('./font-size');
+const Font = require('./font');
 const Height = require('./height');
 
-
-
 module.exports = {
-  ...FontSize,
+  ...Font,
   ...Height
 }
