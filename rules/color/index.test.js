@@ -24,6 +24,10 @@ testRule(rule, {
     {
       code: 'a { color: #d7d7d8; }',
       message: '#d7d7d8 建议替换成 @gray-8 变量 (vars/color-variables)'
+    },
+    {
+      code: 'a { color: green; }',
+      message: 'green 建议替换成 @gray-11 变量 (vars/color-variables)'
     }
   ]
 });
@@ -50,6 +54,10 @@ testRule(rule, {
     {
       code: 'a { color: #d7d7d8; }',
       message: '#d7d7d8 建议替换成 $gray-8 变量 (vars/color-variables)'
+    },
+    {
+      code: 'a { color: green; }',
+      message: 'green 建议替换成 $gray-11 变量 (vars/color-variables)'
     }
   ]
 });
