@@ -59,22 +59,25 @@ $font-sm: 14px;
 *font*
 
 - [x] font-size
-- [ ] font-style
-- [ ] line-height
-- [ ] font-weight
-- [ ] font-variant
-- [ ] text-transform
-- [ ] text-decoration
-- [ ] font-family
+- [x] font-style
+- [x] line-height
+- [x] font-weight
+- [x] font-variant
+- [x] text-transform
+- [x] text-decoration
+- [x] font-family
 
 *background*
 
-- [ ] backround
+- [ ] background
 - [ ] background-color
 - [ ] background-image
 - [ ] background-repeat
 - [ ] background-attachment
 - [ ] background-position
+- [ ] background-clip
+- [ ] background-origin
+- [ ] background-size
 
 *block*
 

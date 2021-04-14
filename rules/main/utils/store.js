@@ -1,14 +1,14 @@
 const _ = require('lodash');
 const { resolveMatchRules } = require('./default-match-rule');
-const VAR_REGEXP_PREFIX = '^([$@])(S)*';
+const VAR_REGEXP_PREFIX = '^([$@])(\\S)*';
 
 // 存储的值
 const styleKeyAndVarsMap = {};
 let matchRules = {};
 
 // 相关方法
-const canMatch = (value, matches) => {
-  return matches.some(m => new RegExp(VAR_REGEXP_PREFIX + m).test(value));
+const canMatch = (value, match) => {
+  return new RegExp(VAR_REGEXP_PREFIX + match).test(value);
 };
 
 const isSupportStyleKey = (styleKey) => {
@@ -17,10 +17,14 @@ const isSupportStyleKey = (styleKey) => {
 
 const storeConfig = (styleVars) => {
   Object.entries(matchRules).forEach(([styleKey, styleMatchRule]) => {
-    styleKeyAndVarsMap[styleKey] = _.map(styleVars, (value, key) => ({
-      key,
-      value
-    })).filter(({ key }) => canMatch(key, styleMatchRule));
+    styleKeyAndVarsMap[styleKey] = _.chain(styleMatchRule).map(
+      m => {
+        return _.chain(styleVars)
+          .map((value, key) => ({ key, value }))
+          .filter(({ key }) => canMatch(key, m))
+          .value();
+      }
+    ).flatten().uniqWith(_.isEqual).value();
   });
 };
 
@@ -31,14 +35,18 @@ const storeMatchRules = (config) => {
   return isChange;
 };
 
-// 使用方式
+// // 使用方式
 // storeMatchRules({
-//   'font-size': ['sss']
-// })
+//   'font-size': {
+//     value: ['sss'],
+//     mergeRule: 'append'
+//   }
+// });
 // storeConfig({
 //   '$font-size-base': '14px',
-//   '$sss': '14x'
-// })
+//   '$sss': '14x',
+//   '$wavy-line': "20px"
+// });
 
 module.exports = {
   storeConfig,
