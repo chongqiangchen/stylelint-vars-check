@@ -1,8 +1,21 @@
 const _ = require('lodash');
 const isColor = require('is-color');
+const splitWords = require('../utils/split-words');
+const { generateMoreConfigMsg } = require('../../../utils/common');
+const { resolveValue } = require('../utils/resolve-value');
 
-class Background  {
+class Background {
   matchRule = ['background', 'bg'];
+  propClazz = {
+    'background-color': new BackgroundColor(),
+    'background-image': new BackgroundImage(),
+    'background-repeat': new BackgroundRepeat(),
+    'background-attachment': new BackgroundAttachment(),
+    'background-position': new BackgroundPosition(),
+    'background-clip': new BackgroundClipOrOrigin(),
+    'background-origin': new BackgroundClipOrOrigin(),
+    'background-size': new BackgroundSize()
+  };
 
   needNotice(value) {
     const bgArr = value.split(' ');
@@ -14,12 +27,11 @@ class Background  {
     let result = null;
 
     Object.keys(resolveObj).forEach(key => {
-      const varConfig = _.find(map, ({ value }) => value === resolveObj[key].toLowerCase());
-      if (varConfig) {
-        const msg = `${key}: ${resolveObj[key]} 建议替换成 ${varConfig.key} 变量`;
-        result = result ? msg: `\n ${msg}`;
+      const msg = this.propClazz[key].getMsg(map, resolveObj[key]);
+      if (msg) {
+        result = !result ? msg : `${result}\n${msg}`;
       }
-    })
+    });
     return result;
   }
 }
@@ -32,13 +44,7 @@ class BackgroundColor {
   }
 
   getMsg(map, curValue) {
-    const varConfig = _.find(map, ({ value }) => value === curValue.toLowerCase());
-
-    if (varConfig) {
-      return `${curValue} 建议替换成 ${varConfig.key} 变量`;
-    }
-
-    return null;
+    return generateMoreConfigMsg(curValue, _.filter(map, ({ value }) => value === curValue || value === resolveValue(curValue)));
   }
 
   static is(value) {
@@ -99,129 +105,53 @@ class BackgroundClipOrOrigin extends BackgroundColor {
   }
 }
 
-const BackgroundStatus = {
-  START: 'START',
-  END: 'END',
-  POSITION_AND_SIZE_DELIMITER: 'POSITION_AND_SIZE_DELIMITER',
-  LINER_GRADIENT: 'LINER_GRADIENT',
-  IMAGE_URL: 'IMAGE_URL',
-  COLOR: 'COLOR'
-};
-
 function resolveBackground(curValue) {
   let result = {};
-  let tmpStr = '';
-  let bracketsNum = 0;
-  let status = BackgroundStatus.START;
   let isBgSize = false;
-  const END_ATTACH = '  ';
+  let splitArr = splitWords(curValue);
 
-
-  const update = () => {
-    if (BackgroundColor.is(tmpStr)) {
-      result['background-color'] = tmpStr;
-    } else if (BackgroundImage.is(tmpStr)) {
+  const update = (word) => {
+    if (BackgroundColor.is(word)) {
+      result['background-color'] = word;
+    } else if (BackgroundImage.is(word)) {
       const curImageValue = result['background-image'];
-      result['background-image'] = !curImageValue ? tmpStr : curImageValue + ',' + tmpStr;
-    } else if (BackgroundRepeat.is(tmpStr)) {
-      result['background-repeat'] = tmpStr;
-    } else if (BackgroundAttachment.is(tmpStr)) {
+      result['background-image'] = !curImageValue ? word : curImageValue + ' , ' + word;
+    } else if (BackgroundRepeat.is(word)) {
+      result['background-repeat'] = word;
+    } else if (BackgroundAttachment.is(word)) {
       const curAttachmentValue = result['background-attachment'];
-      result['background-attachment'] = !curAttachmentValue ? tmpStr : curAttachmentValue + ',' + tmpStr;
-    } else if (BackgroundPosition.is(tmpStr) || BackgroundSize.is(tmpStr)) {
+      result['background-attachment'] = !curAttachmentValue ? word : curAttachmentValue + ' , ' + word;
+    } else if (BackgroundPosition.is(word) || BackgroundSize.is(word)) {
       if (!isBgSize) {
         const curValue = result['background-position'];
-        result['background-position'] = !curValue ? tmpStr : curValue + ' ' + tmpStr;
+        result['background-position'] = !curValue ? word : curValue + ' ' + word;
       } else {
         const curValue = result['background-size'];
-        result['background-size'] = !curValue ? tmpStr : curValue + ' ' + tmpStr;
+        result['background-size'] = !curValue ? word : curValue + ' ' + word;
       }
-    } else if (BackgroundClipOrOrigin.is(tmpStr)) {
+    } else if (BackgroundClipOrOrigin.is(word)) {
       const curOriginValue = result['background-origin'];
       if (!curOriginValue) {
-        result['background-origin'] = tmpStr;
-        result['background-clip'] = tmpStr;
+        result['background-origin'] = word;
+        result['background-clip'] = word;
       } else {
-        result['background-clip'] = tmpStr;
+        result['background-clip'] = word;
       }
     }
 
-
-    if (!BackgroundPosition.is(tmpStr) || !BackgroundSize.is(tmpStr)) {
+    if (!BackgroundPosition.is(word) || !BackgroundSize.is(word)) {
       isBgSize = false;
     }
   };
 
-  const resetStatus = (char) => {
-    tmpStr = char !== ' ' ? char : '';
-    status = BackgroundStatus.START;
-  };
-
-  for (let char of curValue + END_ATTACH) {
-    switch (status) {
-      case BackgroundStatus.START:
-        // 注1和注2两个顺序不能换，考虑到30% / 50%的情况
-        // 注1
-        if (char === '/' || tmpStr.indexOf('/') !== -1) {
-          status = BackgroundStatus.POSITION_AND_SIZE_DELIMITER;
-          break;
-        }
-        // 注2
-        if (char === ' ') {
-          status = BackgroundStatus.END;
-          break;
-        }
-
-        tmpStr += char;
-
-        if (tmpStr === 'linear-gradient') {
-          status = BackgroundStatus.LINER_GRADIENT;
-        }
-        if (tmpStr === 'url') {
-          status = BackgroundStatus.IMAGE_URL;
-        }
-        if (tmpStr === 'rgba' || tmpStr === 'rgb') {
-          status = BackgroundStatus.COLOR;
-        }
-        break;
-      case BackgroundStatus.END:
-        update();
-        resetStatus(char);
-        break;
-      case BackgroundStatus.POSITION_AND_SIZE_DELIMITER:
-        const splitArr = tmpStr.split('/');
-        if (splitArr[0] !== '') {
-          result['background-position'] =
-            !result['background-position'] ? splitArr[0]
-              : result['background-position'] + ' ' + splitArr[0];
-        }
-        isBgSize = true;
-        resetStatus(char);
-        break;
-      case BackgroundStatus.LINER_GRADIENT:
-        if (char === '(') bracketsNum++;
-        if (char === ')') bracketsNum--;
-        tmpStr += char;
-        if (bracketsNum === 0) status = BackgroundStatus.END;
-        break;
-      case BackgroundStatus.IMAGE_URL:
-        if (char === '(') bracketsNum++;
-        if (char === ')') bracketsNum--;
-        tmpStr += char;
-        if (bracketsNum === 0) status = BackgroundStatus.END;
-        break;
-      case BackgroundStatus.COLOR:
-        if (char === 'a') {
-          tmpStr += char;
-          break;
-        }
-        if (char === '(') bracketsNum++;
-        if (char === ')') bracketsNum--;
-        tmpStr += char;
-        if (bracketsNum === 0) status = BackgroundStatus.END;
-        break;
+  splitArr.forEach(word => {
+    if (word === '/') {
+      isBgSize = true;
+    } else {
+      update(word);
     }
-  }
+  });
+
   return result;
 }
 
@@ -237,18 +167,24 @@ module.exports = {
   'background-size': new BackgroundSize()
 };
 
-
 // 测试使用
 // resolveBackground('linear-gradient(rgba(0, 0, 255, 0.5), rgba(255, 255, 0, 0.5)), url(\'../../media/examples/lizard.png\') 50% 50% / 30% 30% border-box content-box');
-// resolveBackground("no-repeat url(\\'../../media/examples/lizard.png\\')")
+// resolveBackground("no-repeat url('../../media/examples/lizard.png')")
 // resolveBackground('#fff center/contain');
-// resolveBackground('rgb(0, 0, 255) url(\'./img/src/sss,jpg\') no-repeat center / contain');
-//
-// const bgClazz = new Background();
-// bgClazz.getMsg(
+// resolveBackground("rgb(0, 0, 255) url('./img/src/sss,jpg') no-repeat center / contain");
+// //
+// const bgClazz = new BackgroundColor();
+// console.log(bgClazz.getMsg(
 //   [{
 //     key: '$bg-size',
 //     value: 'contain'
+//   },{
+//     key: '$bg-size-1',
+//     value: 'contain'
+//   }, {
+//     key: '$bg-img',
+//     value: "url(\\'./img/src/sss,jpg\\')"
 //   }],
-//   "rgb(0, 0, 255) url(\\'./img/src/sss,jpg\\') no-repeat center / contain"
-// )
+//   "contain"
+//   )
+// );

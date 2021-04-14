@@ -1,4 +1,5 @@
 const _ = require('lodash');
+const { cleanValue } = require('./resolve-value');
 const { resolveMatchRules } = require('./default-match-rule');
 const VAR_REGEXP_PREFIX = '^([$@])(\\S)*';
 
@@ -20,7 +21,11 @@ const storeConfig = (styleVars) => {
     styleKeyAndVarsMap[styleKey] = _.chain(styleMatchRule).map(
       m => {
         return _.chain(styleVars)
-          .map((value, key) => ({ key, value }))
+          .map((value, key) => ({
+            // 我们存储变量时需要清理一下对应的值
+            value: cleanValue(value),
+            key
+          }))
           .filter(({ key }) => canMatch(key, m))
           .value();
       }
@@ -43,7 +48,7 @@ const storeMatchRules = (config) => {
 //   }
 // });
 // storeConfig({
-//   '$font-size-base': '14px',
+//   '$font-size-base': 'rgba(1 , 12, 12) 14px 12px',
 //   '$sss': '14x',
 //   '$wavy-line': "20px"
 // });

@@ -1,11 +1,10 @@
 const _ = require('lodash');
-const path = require('path');
 const stylelint = require('stylelint');
 const { isTestEnv } = require('../../utils/env');
-const { execSync } = require('child_process');
 const { FONT_SIZE_VAR_REGEXP } = require('./RegExp');
 const { getFontSizeMap, getFontSizeVarMessage } = require('./utils');
-
+const lessVars = require('../../utils/less-vars');
+const sassVars = require('../../utils/sass-vars');
 const { report, ruleMessages, validateOptions } = stylelint.utils;
 
 const ruleName = 'vars/font-size-variables';
@@ -25,9 +24,8 @@ const messages = ruleMessages(ruleName, {
  */
 function rule(inputs, options) {
   const { paths, styleType } = inputs;
-  const parseVarsPath = path.resolve(__dirname, '../../extract-vars/index.js');
   if (!styleVars || isTestEnv) {
-    styleVars = execSync(`node ${parseVarsPath} ${paths} ${styleType}`).toString('UTF-8');
+    styleVars = styleType === 'less' ? lessVars(paths) : sassVars(paths);
   }
   let fontSizeMap;
   try {

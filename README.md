@@ -69,15 +69,15 @@ $font-sm: 14px;
 
 *background*
 
-- [ ] background
-- [ ] background-color
-- [ ] background-image
-- [ ] background-repeat
-- [ ] background-attachment
-- [ ] background-position
-- [ ] background-clip
-- [ ] background-origin
-- [ ] background-size
+- [x] background
+- [x] background-color
+- [x] background-image
+- [x] background-repeat
+- [x] background-attachment
+- [x] background-position
+- [x] background-clip
+- [x] background-origin
+- [x] background-size
 
 *block*
 

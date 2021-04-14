@@ -2,14 +2,14 @@ const _ = require('lodash');
 const StyleKeys = require('../style-key');
 
 // 匹配值顺序 [(...用户向前增加的值), styleKey本身, ...可能存在的值, (...用户向后增加的值)]
-const DEFAULT_MATCH_RULES = (() => {
+const DEFAULT_MATCH_RULES = () => {
   let result = {};
   Object.keys(StyleKeys).forEach(key=> {
     const clazz = StyleKeys[key];
     result[key] = clazz.matchRule;
   })
   return result;
-})();
+};
 
 const MergeRule = {
   REPLACE: 'replace',
@@ -20,7 +20,7 @@ const MergeRule = {
 // {'font-size': ['font']} 默认replace
 // {'font-size': {value: ['font'], mergeRule: 'replace | append | prepend'}}
 const resolveMatchRules = (ruleConfig) => {
-  let result = DEFAULT_MATCH_RULES;
+  let result = DEFAULT_MATCH_RULES();
   Object.entries(ruleConfig).forEach(([key, value]) => {
     let mergeRule = MergeRule.REPLACE;
     let mergeValue;

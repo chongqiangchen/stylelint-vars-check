@@ -1,6 +1,6 @@
 const _ = require('lodash');
-const splitWords = require('../utils/split-words');
-const resolveValue = require('../utils/resolve-value');
+const { generateMoreConfigMsg } = require('../../../utils/common');
+const { resolveValue } = require('../utils/resolve-value');
 
 class FontSize {
   matchRule = ['font-size', 'font', 'fnt'];
@@ -10,13 +10,7 @@ class FontSize {
   }
 
   getMsg(map, curValue) {
-    const varConfig = _.find(map, ({ value }) => value === curValue.toLowerCase());
-
-    if (varConfig) {
-      return `${curValue} 建议替换成 ${varConfig.key} 变量`;
-    }
-
-    return null;
+    return generateMoreConfigMsg(curValue, _.filter(map, ({ value }) => value === curValue));
   }
 }
 
@@ -44,9 +38,7 @@ class TextDecoration extends FontSize {
   matchRule = ['text-decoration', 'txt-decoration', 'text', 'txt', 'line', 'underscore', 'underline', 'penetrating-line', 'strikethrough', 'flashing'];
 
   getMsg(map, curValue) {
-    // todo: 拆词，找到是color的词，得到matchColor值
-    const words = splitWords(curValue.toLowerCase());
-    const varConfig = _.find(map, ({ value }) => value === resolveValue(words).less || value === resolveValue(words).sass);
+    const varConfig = _.find(map, ({ value }) => value === curValue || value === resolveValue(curValue));
 
     if (varConfig) {
       return `${curValue} 建议替换成 ${varConfig.key} 变量`;

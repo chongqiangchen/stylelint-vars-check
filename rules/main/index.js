@@ -1,10 +1,11 @@
 const _ = require('lodash');
-const path = require('path');
 const stylelint = require('stylelint');
 const { storeConfig, storeMatchRules, isSupportStyleKey, styleKeyAndVarsMap } = require('./utils/store');
-const { execSync } = require('child_process');
 const StyleKeys = require('./style-key');
+const { cleanValue } = require('./utils/resolve-value');
 const { isFilesChange } = require('./utils/fs-change');
+const lessVars = require('../../utils/less-vars');
+const sassVars = require('../../utils/sass-vars');
 
 const { report, ruleMessages, validateOptions } = stylelint.utils;
 
@@ -23,12 +24,9 @@ const messages = ruleMessages(ruleName, {
  */
 function rule(inputs) {
   const { paths, styleType, ruleConfig } = inputs;
-  const parseVarsPath = path.resolve(__dirname, '../../extract-vars/index.js');
-
   const matchRuleIsChange = storeMatchRules(ruleConfig);
-
   if (isFilesChange(paths) || matchRuleIsChange) {
-    styleVarString = execSync(`node ${parseVarsPath} ${paths} ${styleType}`).toString('UTF-8');
+    styleVarString = styleType === 'less' ? lessVars(paths) : sassVars(paths);
 
     try {
       const styleVars = JSON.parse(styleVarString);
@@ -55,9 +53,10 @@ function rule(inputs) {
     root.walkDecls(decl => {
       // decl
       const styleKeyClass = StyleKeys[decl.prop.toLowerCase()];
+      const curValue = cleanValue(decl.value); // 我们需要清理css value值
       // todo: 若存在支持的StyleKey，那么提示其增加对应的class
-      if(isSupportStyleKey(decl.prop.toLowerCase()) && styleKeyClass && styleKeyClass.needNotice(decl.value)) {
-        const msg = styleKeyClass.getMsg(styleKeyAndVarsMap[decl.prop.toLowerCase()], decl.value);
+      if(isSupportStyleKey(decl.prop.toLowerCase()) && styleKeyClass && styleKeyClass.needNotice(curValue)) {
+        const msg = styleKeyClass.getMsg(styleKeyAndVarsMap[decl.prop.toLowerCase()], curValue);
         if(msg) {
           report({
             message: messages.rejected(msg),
