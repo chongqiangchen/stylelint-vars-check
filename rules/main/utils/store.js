@@ -35,7 +35,7 @@ const storeConfig = (styleVars) => {
 
 const storeMatchRules = (config) => {
   const curMatchRules = resolveMatchRules(config || {});
-  const isChange = _.isEqual(curMatchRules, matchRules);
+  const isChange = !_.isEqual(curMatchRules, matchRules);
   matchRules = curMatchRules;
   return isChange;
 };
