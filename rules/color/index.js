@@ -7,11 +7,9 @@ const stylelint = require('stylelint');
 const resolveColor = require('../../utils/resolve-color');
 const { isTestEnv } = require('../../utils/env');
 const { report, ruleMessages, validateOptions } = stylelint.utils;
-const lessVars = require('../../utils/less-vars');
-const sassVars = require('../../utils/sass-vars');
 
 const ruleName = 'vars/color-variables';
-let styleVars;
+let sassVars;
 
 function getColorWarnMessage(color, colorInfo) {
   let varName = Object.keys(_.pickBy(colorInfo, value => value === resolveColor(color) || value === color));
@@ -28,11 +26,12 @@ const messages = ruleMessages(ruleName, {
 });
 
 function rule(inputs) {
-  const { paths, styleType } = inputs;
-  if (!styleVars || isTestEnv) {
-    styleVars = styleType === 'less' ? lessVars(paths) : sassVars(paths);
+  const {paths, styleType} = inputs;
+  const parseVarsPath = path.resolve(__dirname, '../../extract-vars.js');
+  if (!sassVars || isTestEnv) {
+    sassVars = execSync(`node ${parseVarsPath} ${paths} ${styleType}`).toString('UTF-8');
   }
-  const colorInfo = JSON.parse(styleVars);
+  const colorInfo = JSON.parse(sassVars);
 
   return (root, result) => {
     const validOptions = validateOptions(

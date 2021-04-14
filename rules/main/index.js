@@ -1,11 +1,11 @@
 const _ = require('lodash');
 const stylelint = require('stylelint');
 const { storeConfig, storeMatchRules, isSupportStyleKey, styleKeyAndVarsMap } = require('./utils/store');
+const { execSync } = require('child_process');
+const path = require('path');
 const StyleKeys = require('./style-key');
 const { cleanValue } = require('./utils/resolve-value');
 const { isFilesChange } = require('./utils/fs-change');
-const lessVars = require('../../utils/less-vars');
-const sassVars = require('../../utils/sass-vars');
 
 const { report, ruleMessages, validateOptions } = stylelint.utils;
 
@@ -24,9 +24,12 @@ const messages = ruleMessages(ruleName, {
  */
 function rule(inputs) {
   const { paths, styleType, ruleConfig } = inputs;
+  const parseVarsPath = path.resolve(__dirname, '../../extract-vars.js');
+
   const matchRuleIsChange = storeMatchRules(ruleConfig);
+
   if (isFilesChange(paths) || matchRuleIsChange) {
-    styleVarString = styleType === 'less' ? lessVars(paths) : sassVars(paths);
+    styleVarString = execSync(`node ${parseVarsPath} ${paths} ${styleType}`).toString('UTF-8');
 
     try {
       const styleVars = JSON.parse(styleVarString);
