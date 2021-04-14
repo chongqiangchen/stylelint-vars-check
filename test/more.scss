@@ -1,6 +1,7 @@
 // font
 $font-size-base: 14px;
 $font-size-1: 16px;
+$btn-font-size-1: 16px;
 $font-size-2: 18px;
 $font-size-3: 20px;
 $font-style: oblique;
@@ -10,5 +11,16 @@ $font-variant: small-caps slashed-zero;
 $txt-transform: uppercase;
 $color-1: green;
 $wavy-line: $color-1 wavy underline;
+
+// bg
+$bg-color-1: red;
+$bg-size: 30% 30%;
+$bg-img-1: url('./../xx.png');
+$bg-repeat: no-repeat;
+$bg-attachment: local, scroll;
+$bg-position: bottom 10px right 20px;
+$bg-clip: border-box;
+$bg-origin: $bg-clip;
+$bg-image: linear-gradient(rgba(0, 0, 255, 0.5), rgba(255, 255, 0, 0.5)), url('../../media/examples/lizard.png');
 //
 $ht-size-1: 16px;
