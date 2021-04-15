@@ -22,19 +22,19 @@ $font-sm: 14px;
 
 ## 使用
 
-```text
-// stylelint.store.js
-    {
+```javascript
+// stylelint.config.js
+    module.exports = {
         plugins: ['stylelint-vars-check'],
         rules: {
-            'vars/font-size-variables': [
-                {
-                    paths: ['./src/styles/font-size.less'],  // 你的变量文件路径
-                    styleType: 'less'  // 或者'scss'
-                },
-                {
-                    "severity": "warning" // 警告或者错误自己选择
-                }
+            'vars/check': [
+              {
+                paths: ['./src/styles/variables.less'],
+                styleType: 'less',
+              },
+              {
+                severity: 'warning',
+              },
             ],
             'vars/color-variables': [
                 {
@@ -49,12 +49,43 @@ $font-sm: 14px;
     }
 ```
 
-## 预发布功能：
+## 是怎么匹配的呢？
+`vars/check`规则中，首先会根据支持css样式中对应可能的匹配正则，如：`font-size: ['font-size', 'font']`，会收集variable.scss中所有`/^([$@])(\S)*font-size/ | /^([$@])(\S)*font/`相关的值存放到一个集合中，
+然后在匹配到对应css样式名时，会判断值是否已经是变量，若不是，则会在先前收集的集合中找到value相等的变量，并报告出来。
 
-1. 新增全变量匹配（除color相关，继续使用之前处理方案）功能，只需要提供一个less/sass变量文件，即可在全局相对应的地方提示
-2. 重构font-size匹配，合并到全变量匹配中
+由于我会假想css每个样式名可能书写的变量名，所以会存在特殊名词下无法匹配成功的情况，故提供选项可供用户自定义相关css样式匹配的值，参考代码如下：
 
-## 支持的CSS样式
+```javascript
+// 1. 若直接书写ruleConfig: { 'font-size': ['test'] }，将会直接覆盖插件本身对font-size中的匹配值['font-size', 'font']
+ rules: {
+  'vars/check': [
+    {
+      paths: ['./src/styles/variables.less'],
+      styleType: 'less',
+      ruleConfig: { 'font-size': ['test'] }
+    },
+    {
+      severity: 'warning',
+    },
+  ]
+ }
+// 2. 若仅仅只是增加，并非覆盖 {'font-size': {value: ['font'], mergeRule: 'replace | append | prepend'}}
+// append和prepend都是添加，区别在于先后匹配查询的顺序
+rules: {
+  'vars/check': [
+    {
+      paths: ['./src/styles/variables.less'],
+      styleType: 'less',
+      ruleConfig: {'font-size': {value: ['test'], mergeRule: 'append'}}
+    },
+    {
+      severity: 'warning',
+    },
+  ]
+}
+```
+
+## 支持的相关CSS样式匹配程度
 
 *font*
 
@@ -81,38 +112,30 @@ $font-sm: 14px;
 
 *block*
 
-- [ ] letter-spacing
-- [ ] text-align
-- [ ] text-indent 缩进
-- [ ] vertical-align
-- [ ] word-spacing
-- [ ] display
+- [x] letter-spacing
+- [x] text-align
+- [x] text-indent 缩进
+- [x] vertical-align
+- [x] word-spacing
+- [x] display
 
 *box*
 
-- [ ] width
+- [x] width
 - [x] height
-- [ ] padding(top, right, bottom, left)
-- [ ] float
-- [ ] margin(top, right, bottom, left)
+- [x] padding(top, right, bottom, left)
+- [x] float
+- [x] margin(top, right, bottom, left)
 
 *border*
 
-- [ ] border
+- [x] border
 - [ ] border-style
 - [ ] border-width
 - [ ] border-color
 
-*list*
-
-- [ ] list-style-type
-- [ ] list-style-position
-- [ ] list-style-image
-
 *position*
 
-- [ ] position(left, right, bottom, top)
-- [ ] visibility
-- [ ] overflow
-- [ ] clip
+- [x] position(left, right, bottom, top)
+- [x] clip
 
