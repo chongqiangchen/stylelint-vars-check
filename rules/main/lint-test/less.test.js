@@ -2,34 +2,6 @@ const testRule = require('stylelint-test-rule-tape');
 
 const rules = require('../..');
 const rule = rules['main-check'];
-testRule(rule, {
-  ruleName: rule.ruleName,
-  config: [{ paths: ['./test/more.less'], styleType: 'less' }, {
-    'severity': 'warning'
-  }],
-  accept: [
-    {
-      code: 'a { font-size: @font-size-xl;}'
-    },
-    {
-      code: 'a { padding: 16px;background: #fff center/contain;}'
-    }
-  ],
-  reject: [
-    {
-      code: 'a { height: 16px; }',
-      message: '16px 建议替换成 @ht-size-1 变量 (vars/check)'
-    },
-    {
-      code: 'a { font-size: 14px; }',
-      message: '14px 建议替换成 @font-size-base 变量 (vars/check)'
-    },
-    {
-      code: 'a {line-height: 2px}',
-      message: '2px 建议替换成 @line-height-base 变量 (vars/check)'
-    }
-  ]
-});
 
 // font测试
 testRule(rule, {
@@ -114,6 +86,94 @@ testRule(rule, {
     }
   ]
 });
+
+
+// block
+testRule(rule, {
+  ruleName: rule.ruleName,
+  config: [{ paths: ['./test/more.less'], styleType: 'less' }, {
+    'severity': 'warning'
+  }],
+  reject: [
+    {
+      code: 'a { letter-spacing: 3px; }',
+      message: '3px 建议替换成 @letter-spacing 变量 (vars/check)'
+    },
+    {
+      code: 'a { text-align: left; }',
+      message: 'left 建议替换成 @text-align 变量 (vars/check)'
+    },
+    {
+      code: 'a { text-indent: 15%; }',
+      message: '15% 建议替换成 @text-indent 变量 (vars/check)'
+    },
+    {
+      code: 'a { vertical-align: middle; }',
+      message: 'middle 建议替换成 @vertical-align 变量 (vars/check)'
+    },
+    {
+      code: 'a { word-spacing: 3px; }',
+      message: '3px 建议替换成 @word-spacing 变量 (vars/check)'
+    },
+    {
+      code: 'a { display: flex; }',
+      message: 'flex 建议替换成 @display 变量 (vars/check)'
+    },
+  ]
+});
+
+// box
+testRule(rule, {
+  ruleName: rule.ruleName,
+  config: [{ paths: ['./test/more.less'], styleType: 'less' }, {
+    'severity': 'warning'
+  }],
+  reject: [
+    {
+      code: 'a { width: 2px; }',
+      message: '2px 建议替换成 @width 变量 (vars/check)'
+    },
+    {
+      code: 'a { height: 10px; }',
+      message: '10px 建议替换成 @height 变量 (vars/check)'
+    },
+    {
+      code: 'a { padding: 20px; }',
+      message: '20px 建议替换成 @padding 变量 (vars/check)'
+    },
+    {
+      code: 'a { float: left; }',
+      message: 'left 建议替换成 @float 变量 (vars/check)'
+    },
+    {
+      code: 'a { margin: 20px; }',
+      message: '20px 建议替换成 @margin 变量 (vars/check)'
+    }
+  ]
+});
+
+// border
+testRule(rule, {
+  ruleName: rule.ruleName,
+  config: [{ paths: ['./test/more.less'], styleType: 'less' }, {
+    'severity': 'warning'
+  }],
+  reject: [
+    {
+      code: 'a { border: 2px; }',
+      message: '2px 建议替换成 @border 变量 (vars/check)'
+    },
+    {
+      code: 'a { position: absolute; }',
+      message: 'absolute 建议替换成 @position 变量 (vars/check)'
+    },
+    {
+      code: 'a { clip: rect(1px, 10em, 3rem, 2ch); }',
+      message: 'rect(1px, 10em, 3rem, 2ch) 建议替换成 @clip 变量 (vars/check)'
+    },
+  ]
+});
+
 
 // // 测试ruleConfig replace方案
 testRule(rule, {

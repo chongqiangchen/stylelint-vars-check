@@ -120,7 +120,7 @@ testRule(rule, {
   ]
 });
 
-// bpx
+// box
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [{ paths: ['./test/more.scss'], styleType: 'scss' }, {
