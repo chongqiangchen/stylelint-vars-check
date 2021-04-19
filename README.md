@@ -1,6 +1,6 @@
 # stylelint-vars-check
 
-> 利用stylelint检查sass,less变量，并通过vscode stylelint插件，webStorm stylelint插件进行提示
+> 利用stylelint检查sass,less变量，通过stylelint插件进行提示
 
 ## 作用
 
@@ -22,24 +22,30 @@ $font-sm: 14px;
 
 ## 使用
 
+`vars/check`： 针对指定文件中所有变量
+
+`vars/color-variables`: 仅针对文件中涉及颜色的变量（是对vars/check规则的弥补，建议一起使用，若项目仅针对颜色变量也可以单独使用此规则）
+
 ```javascript
 // stylelint.config.js
     module.exports = {
         plugins: ['stylelint-vars-check'],
         rules: {
-            'vars/check': [
+            'vars/check': [ // 针对全部变量
               {
                 paths: ['./src/styles/variables.less'],
                 styleType: 'less',
+                ruleConfig: { 'font-size': ['font'] } // 可选填，用于覆盖或增加对不同css匹配的变量，具体可看下面部分： 是怎么匹配的呢？
               },
               {
                 severity: 'warning',
               },
             ],
-            'vars/color-variables': [
+            'vars/color-variables': [ // 仅针对变量值和css样式值为颜色的校验
                 {
-                   paths: ['./src/styles/color.less'],
-                   styleType: 'less'
+                  paths: ['./src/styles/variables.less'],
+                  styleType: 'less',
+                  // 注意color-variables并不包含ruleConfig配置，因为不需要
                 },
                 {
                     "severity": "warning"
@@ -85,7 +91,7 @@ rules: {
 }
 ```
 
-## 支持的相关CSS样式匹配程度
+## 支持的相关CSS样式匹配程度(针对vars/check规则)
 
 *font*
 
