@@ -1,51 +1,51 @@
 # stylelint-vars-check
 
-> 利用stylelint检查sass,less变量，通过stylelint插件进行提示
+> Use stylelint to check sass and less variables, and prompt through the stylelint plugin
 
-## 作用
+[*English*]() | [中文](./README_zh.md)
 
-在一个项目中大部分会考虑到单独抽出公用的less,sass变量，如下：
+## When to use
+
+Assumption: Extract common SCSS variables from a project and place them in vars.scss
 
 ```text
-// 假设这个文件是vars.scss
-$color-1: #000;
-$color-2: #001;
-$color-3: #002;
+$color-1: #fff;
+$color-2: #f2f2f2;
+$color-3: #333;
 ...
-
 $font-base: 16px;
 $font-sm: 14px;
 ...
 ```
 
-那么在使用的时候，你是否会有遇见过突然忘了这个#001的颜色在vars.scss叫啥名字？如果觉得这是个问题，那么这个插件符合你的需求。
+Do you ever forget the name of the variable with the value #f2f2f2 when you use it? If that's a problem, then this plugin fits your needs.
 
 ## 使用
 
-`vars/check`： 针对指定文件中所有变量
+`vars/check`：For all variables in the specified file
 
-`vars/color-variables`: 仅针对文件中涉及颜色的变量（是对vars/check规则的弥补，建议一起使用，若项目仅针对颜色变量也可以单独使用此规则）
+`vars/color-variables`: Only for variables in the specified file that involve colors（It is a complement to the vars/check rule and is recommended to be used together or separately if the project is only for color variables）
 
 ```javascript
 // stylelint.config.js
     module.exports = {
         plugins: ['stylelint-vars-check'],
         rules: {
-            'vars/check': [ // 针对全部变量
+            'vars/check': [
               {
                 paths: ['./src/styles/variables.less'],
                 styleType: 'less',
-                ruleConfig: { 'font-size': ['font'] } // 可选填，用于覆盖或增加对不同css匹配的变量，具体可看下面部分： 是怎么匹配的呢？
+                ruleConfig: { 'font-size': ['font'] } // Optional to overwrite or add a variable that matches a different CSS. See the following section for details: How to match?
               },
               {
                 severity: 'warning',
               },
             ],
-            'vars/color-variables': [ // 仅针对变量值和css样式值为颜色的校验
+            'vars/color-variables': [
                 {
                   paths: ['./src/styles/variables.less'],
                   styleType: 'less',
-                  // 注意color-variables并不包含ruleConfig配置，因为不需要
+                  // Note: that color-variables do not include the ruleConfig configuration
                 },
                 {
                     "severity": "warning"
@@ -55,14 +55,13 @@ $font-sm: 14px;
     }
 ```
 
-## 是怎么匹配的呢？
-`vars/check`规则中，首先会根据支持css样式中对应可能的匹配正则，如：`font-size: ['font-size', 'font']`，会收集variable.scss中所有`/^([$@])(\S)*font-size/ | /^([$@])(\S)*font/`相关的值存放到一个集合中，
-然后在匹配到对应css样式名时，会判断值是否已经是变量，若不是，则会在先前收集的集合中找到value相等的变量，并报告出来。
+## How to match ?
+In the `vars/check` rule, the first step is to use the regex to find the variables corresponding to each CSS, such as: `font-size:['font-size, 'font']` into regular `/^([$@])(\S)*font-size/ | /^([$@])(\S)*font/`,
+then collect all the relevant values from vars.scss and store them in a Map. When matched to the corresponding CSS style name, it determines if the value is already a variable. If it is not, it will find an equivalent variable in the Map and report it.
 
-由于我会假想css每个样式名可能书写的变量名，所以会存在特殊名词下无法匹配成功的情况，故提供选项可供用户自定义相关css样式匹配的值，参考代码如下：
-
+Because I will assume the variable name that each CSS style name may write, there will be some cases of failure to match under special nouns, so the option is provided for users to customize the matching value of relevant CSS styles. The reference code is as follows:
 ```javascript
-// 1. 若直接书写ruleConfig: { 'font-size': ['test'] }，将会直接覆盖插件本身对font-size中的匹配值['font-size', 'font']
+// 1. ruleConfig: { 'font-size': ['test'] }，the default values will be overridden directly
  rules: {
   'vars/check': [
     {
@@ -75,8 +74,8 @@ $font-sm: 14px;
     },
   ]
  }
-// 2. 若仅仅只是增加，并非覆盖 {'font-size': {value: ['font'], mergeRule: 'replace | append | prepend'}}
-// append和prepend都是添加，区别在于先后匹配查询的顺序
+// 2. {'font-size': {value: ['font'], mergeRule: 'replace | append | prepend'}}
+// append and prepend is all added, the difference is that the sequence matches the order of the query
 rules: {
   'vars/check': [
     {
@@ -91,7 +90,7 @@ rules: {
 }
 ```
 
-## 支持的相关CSS样式匹配程度(针对vars/check规则)
+## Support matching CSS styles(vars/check)
 
 *font*
 
