@@ -3,9 +3,9 @@
 const sassExtract = require('sass-extract');
 const path = require('path');
 const _ = require('lodash');
-const { isTestEnv } = require('../utils/env');
+const { isTestEnv } = require('./env');
 
-const testRootPath = path.resolve(__dirname, '../../');
+const testRootPath = path.resolve(__dirname, '../');
 const prodRootPath = path.resolve(__dirname, '../../../');
 
 class SassVars {

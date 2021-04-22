@@ -1,5 +1,5 @@
 const _ = require('lodash');
-const { FONT_SIZE_VAR_REGEXP } = require('../utils/RegExp');
+const { FONT_SIZE_VAR_REGEXP } = require('./RegExp');
 
 function getFontSizeMap(fontSizeInfo) {
   return _.map(fontSizeInfo, (value, key) => ({

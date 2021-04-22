@@ -1,10 +1,10 @@
 let less = require('less');
 let _ = require('lodash');
 let path = require('path');
-let lessToJs = require('less-vars-to-js');
-const { isTestEnv } = require('../utils/env');
+let lessToJs = require('./less-vars-to-js');
+const { isTestEnv } = require('./env');
 
-const testRootPath = path.resolve(__dirname, '../../');
+const testRootPath = path.resolve(__dirname, '../');
 const prodRootPath = path.resolve(__dirname, '../../../');
 
 function getOutput(files) {

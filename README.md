@@ -1,45 +1,51 @@
 # stylelint-vars-check
 
-> 利用stylelint检查sass,less变量，并通过vscode stylelint插件，webStorm stylelint插件进行提示
+> Use stylelint to check sass and less variables, and prompt through the stylelint plugin
 
-## 作用
+[*English*]() | [中文](./README_zh.md)
 
-在一个项目中大部分会考虑到单独抽出公用的less,sass变量，如下：
+## When to use
+
+Assumption: Extract common SCSS variables from a project and place them in vars.scss
 
 ```text
-// 假设这个文件是vars.scss
-$color-1: #000;
-$color-2: #001;
-$color-3: #002;
+$color-1: #fff;
+$color-2: #f2f2f2;
+$color-3: #333;
 ...
-
 $font-base: 16px;
 $font-sm: 14px;
 ...
 ```
 
-那么在使用的时候，你是否会有遇见过突然忘了这个#001的颜色在vars.scss叫啥名字？如果觉得这是个问题，那么这个插件符合你的需求。
+Do you ever forget the name of the variable with the value #f2f2f2 when you use it? If that's a problem, then this plugin fits your needs.
 
-## 使用
+## How to use
 
-```text
+`vars/check`：For all variables in the specified file
+
+`vars/color-variables`: Only for variables in the specified file that involve colors（It is a complement to the vars/check rule and is recommended to be used together or separately if the project is only for color variables）
+
+```javascript
 // stylelint.config.js
-    {
+    module.exports = {
         plugins: ['stylelint-vars-check'],
         rules: {
-            'vars/font-size-variables': [
-                {
-                    paths: ['./src/styles/font-size.less'],  // 你的变量文件路径
-                    styleType: 'less'  // 或者'scss'
-                },
-                {
-                    "severity": "warning" // 警告或者错误自己选择
-                }
+            'vars/check': [
+              {
+                paths: ['./src/styles/variables.less'],
+                styleType: 'less',
+                ruleConfig: { 'font-size': ['font'] } // Optional to overwrite or add a variable that matches a different CSS. See the following section for details: How to match?
+              },
+              {
+                severity: 'warning',
+              },
             ],
             'vars/color-variables': [
                 {
-                   paths: ['./src/styles/color.less'],
-                   styleType: 'less'
+                  paths: ['./src/styles/variables.less'],
+                  styleType: 'less',
+                  // Note: that color-variables do not include the ruleConfig configuration
                 },
                 {
                     "severity": "warning"
@@ -49,67 +55,94 @@ $font-sm: 14px;
     }
 ```
 
-## 预发布功能：
+## How to match ?
 
-1. 新增全变量匹配（除color相关，继续使用之前处理方案）功能，只需要提供一个less/sass变量文件，即可在全局相对应的地方提示
-2. 重构font-size匹配，合并到全变量匹配中
+In the `vars/check` rule, the first step is to use the regex to find the variables corresponding to each CSS, such as: `font-size:['font-size, 'font']` into regular `/^([$@])(\S)*font-size/ | /^([$@])(\S)*font/`,
+then collect all the relevant values from vars.scss and store them in a Map. When matched to the corresponding CSS style name, it determines if the value is already a variable. If it is not, it will find an equivalent variable in the Map and report it.
 
-## 支持的CSS样式
+Because I will assume the variable name that each CSS style name may write, there will be some cases of failure to match under special nouns, so the option is provided for users to customize the matching value of relevant CSS styles. The reference code is as follows:
+```javascript
+// 1. ruleConfig: { 'font-size': ['test'] }，the default values will be overridden directly
+ rules: {
+  'vars/check': [
+    {
+      paths: ['./src/styles/variables.less'],
+      styleType: 'less',
+      ruleConfig: { 'font-size': ['test'] }
+    },
+    {
+      severity: 'warning',
+    },
+  ]
+ }
+// 2. {'font-size': {value: ['font'], mergeRule: 'replace | append | prepend'}}
+// append and prepend is all added, the difference is that the sequence matches the order of the query
+rules: {
+  'vars/check': [
+    {
+      paths: ['./src/styles/variables.less'],
+      styleType: 'less',
+      ruleConfig: {'font-size': {value: ['test'], mergeRule: 'append'}}
+    },
+    {
+      severity: 'warning',
+    },
+  ]
+}
+```
+
+## Support matching CSS styles(vars/check)
 
 *font*
 
 - [x] font-size
-- [ ] font-style
-- [ ] line-height
-- [ ] font-weight
-- [ ] font-variant
-- [ ] text-transform
-- [ ] text-decoration
-- [ ] font-family
+- [x] font-style
+- [x] line-height
+- [x] font-weight
+- [x] font-variant
+- [x] text-transform
+- [x] text-decoration
+- [x] font-family
 
 *background*
 
-- [ ] backround
-- [ ] background-color
-- [ ] background-image
-- [ ] background-repeat
-- [ ] background-attachment
-- [ ] background-position
+- [x] background
+- [x] background-color
+- [x] background-image
+- [x] background-repeat
+- [x] background-attachment
+- [x] background-position
+- [x] background-clip
+- [x] background-origin
+- [x] background-size
 
 *block*
 
-- [ ] letter-spacing
-- [ ] text-align
-- [ ] text-indent 缩进
-- [ ] vertical-align
-- [ ] word-spacing
-- [ ] display
+- [x] letter-spacing
+- [x] text-align
+- [x] text-indent 缩进
+- [x] vertical-align
+- [x] word-spacing
+- [x] display
 
 *box*
 
-- [ ] width
+- [x] width
 - [x] height
-- [ ] padding(top, right, bottom, left)
-- [ ] float
-- [ ] margin(top, right, bottom, left)
+- [x] padding(top, right, bottom, left)
+- [x] float
+- [x] margin(top, right, bottom, left)
 
 *border*
 
-- [ ] border
+- [x] border
 - [ ] border-style
 - [ ] border-width
 - [ ] border-color
 
-*list*
-
-- [ ] list-style-type
-- [ ] list-style-position
-- [ ] list-style-image
-
 *position*
 
-- [ ] position(left, right, bottom, top)
-- [ ] visibility
-- [ ] overflow
-- [ ] clip
+- [x] position(left, right, bottom, top)
+- [x] clip
+
 
