@@ -38,13 +38,7 @@ class TextDecoration extends FontSize {
   matchRule = ['text-decoration', 'txt-decoration', 'text', 'txt', 'line', 'underscore', 'underline', 'penetrating-line', 'strikethrough', 'flashing'];
 
   getMsg(map, curValue) {
-    const varConfig = _.find(map, ({ value }) => value === curValue || value === resolveValue(curValue));
-
-    if (varConfig) {
-      return `${curValue} 建议替换成 ${varConfig.key} 变量`;
-    }
-
-    return null;
+    return generateMoreConfigMsg(curValue, _.filter(map, ({ value }) => value === curValue || value === resolveValue(curValue)));
   }
 }
 

@@ -1,6 +1,7 @@
 const testRule = require('stylelint-test-rule-tape');
 
 const rules = require('..');
+const { getMsgCnt } = require('../../utils/common');
 const rule = rules['color-check'];
 testRule(rule, {
   ruleName: rule.ruleName,
@@ -19,15 +20,15 @@ testRule(rule, {
   reject: [
     {
       code: 'a { color: #505050; }',
-      message: '#505050 建议替换成 @gray-5 变量 (vars/color-variables)'
+      message: `${getMsgCnt('#505050', '@gray-5')} (vars/color-variables)`
     },
     {
       code: 'a { color: #d7d7d8; }',
-      message: '#d7d7d8 建议替换成 @gray-8 变量 (vars/color-variables)'
+      message: `${getMsgCnt('#d7d7d8', '@gray-8')} (vars/color-variables)`
     },
     {
       code: 'a { color: green; }',
-      message: 'green 建议替换成 @gray-11 变量 (vars/color-variables)'
+      message: `${getMsgCnt('green', '@gray-11')} (vars/color-variables)`
     }
   ]
 });
@@ -49,15 +50,15 @@ testRule(rule, {
   reject: [
     {
       code: 'a { color: #505050; }',
-      message: '#505050 建议替换成 $gray-5 变量 (vars/color-variables)'
+      message: `${getMsgCnt('#505050', '$gray-5')} (vars/color-variables)`
     },
     {
       code: 'a { color: #d7d7d8; }',
-      message: '#d7d7d8 建议替换成 $gray-8 变量 (vars/color-variables)'
+      message: `${getMsgCnt('#d7d7d8', '$gray-8')} (vars/color-variables)`
     },
     {
       code: 'a { color: green; }',
-      message: 'green 建议替换成 $gray-11 变量 (vars/color-variables)'
+      message: `${getMsgCnt('green', '$gray-11')} (vars/color-variables)`
     }
   ]
 });
