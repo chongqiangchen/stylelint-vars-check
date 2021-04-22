@@ -1,5 +1,6 @@
-const { generateMoreConfigMsg } = require('../../../utils/common');
 const _ = require('lodash');
+const { generateMoreConfigMsg } = require('../../../utils/common');
+const { resolveValue } = require('../utils/resolve-value');
 
 
 class Border {
