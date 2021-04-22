@@ -2,6 +2,10 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+## [1.0.0](https://github.com/chongqiangchen/stylelint-vars-check/compare/v1.0.0-beta.2...v1.0.0) (2021-04-22)
+
+### [0.0.6](https://github.com/chongqiangchen/stylelint-vars-check/compare/v0.1.0-alpha.0...v0.0.6) (2021-04-12)
+
 ### 0.0.6 (2021-04-12)
 
 
