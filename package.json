@@ -1,7 +1,7 @@
 {
   "name": "stylelint-vars-check",
   "version": "1.0.0",
-  "description": "利用stylelint检查sass,less变量，并通过vscode stylelint插件，webStorm stylelint插件进行提示",
+  "description": "Use stylelint to check sass and less variables, and prompt through the stylelint plugin",
   "main": "index.js",
   "scripts": {
     "test": "cross-env NODE_ENV=test node ./rules/index.test.js",
