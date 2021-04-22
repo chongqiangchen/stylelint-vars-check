@@ -20,7 +20,7 @@ $font-sm: 14px;
 
 Do you ever forget the name of the variable with the value #f2f2f2 when you use it? If that's a problem, then this plugin fits your needs.
 
-## 使用
+## How to use
 
 `vars/check`：For all variables in the specified file
 
@@ -56,6 +56,7 @@ Do you ever forget the name of the variable with the value #f2f2f2 when you use 
 ```
 
 ## How to match ?
+
 In the `vars/check` rule, the first step is to use the regex to find the variables corresponding to each CSS, such as: `font-size:['font-size, 'font']` into regular `/^([$@])(\S)*font-size/ | /^([$@])(\S)*font/`,
 then collect all the relevant values from vars.scss and store them in a Map. When matched to the corresponding CSS style name, it determines if the value is already a variable. If it is not, it will find an equivalent variable in the Map and report it.
 
