@@ -5,6 +5,7 @@ const path = require('path');
 const isColorProp = require('../../utils/is-color-prop');
 const stylelint = require('stylelint');
 const resolveColor = require('../../utils/resolve-color');
+const { getMsgCnt } = require('../../utils/common');
 const { isTestEnv } = require('../../utils/env');
 const { report, ruleMessages, validateOptions } = stylelint.utils;
 
@@ -14,7 +15,7 @@ let sassVars;
 function getColorWarnMessage(color, colorInfo) {
   let varName = Object.keys(_.pickBy(colorInfo, value => value === resolveColor(color) || value === color));
   if (varName.length) {
-    return `${color} 建议替换成 ${varName} 变量`;
+    return getMsgCnt(color, varName);
   }
   return null;
 }

@@ -76,7 +76,7 @@ class BackgroundAttachment extends BackgroundColor {
   }
 }
 
-// 特殊考虑
+// Special considerations
 class BackgroundPosition extends BackgroundColor {
   matchRule = ['background-position', 'bg-position', 'bg'];
 

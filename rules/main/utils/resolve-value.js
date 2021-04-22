@@ -1,14 +1,11 @@
-/**
- * 由于相关
- * @param value
- * @returns {*}
- */
 const resolveColor = require('../../../utils/resolve-color');
 const splitWords = require('./split-words');
 const { isKeyword } = require('is-color');
 
 /**
- * 与cleanValue区别于 其会不仅删去不需要的空格等字符并对一些不符合比对要求的值进行更改
+ * The difference from cleanValue is that it will
+ * not only delete unnecessary spaces and other characters,
+ * but also change some values that do not meet the comparison requirements.
  * @param curValue
  * @param mergeSymbol
  * @returns {*}
@@ -25,7 +22,7 @@ function resolveValue(curValue, mergeSymbol = ' ') {
 }
 
 /**
- * 删去不需要的空格等字符
+ * Delete unnecessary spaces and other characters
  * @param curValue
  * @param mergeSymbol
  * @returns {string}

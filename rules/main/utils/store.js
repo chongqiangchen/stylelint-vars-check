@@ -3,11 +3,11 @@ const { cleanValue } = require('./resolve-value');
 const { resolveMatchRules } = require('./default-match-rule');
 const VAR_REGEXP_PREFIX = '^([$@])(\\S)*';
 
-// 存储的值
+// Stored value
 const styleKeyAndVarsMap = {};
 let matchRules = {};
 
-// 相关方法
+// Related methods
 const canMatch = (value, match) => {
   return new RegExp(VAR_REGEXP_PREFIX + match).test(value);
 };
@@ -40,7 +40,7 @@ const storeMatchRules = (config) => {
   return isChange;
 };
 
-// // 使用方式
+// How to use
 // storeMatchRules({
 //   'font-size': {
 //     value: ['sss'],

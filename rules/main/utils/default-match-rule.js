@@ -1,7 +1,7 @@
 const _ = require('lodash');
 const StyleKeys = require('../style-key');
 
-// 匹配值顺序 [(...用户向前增加的值), styleKey本身, ...可能存在的值, (...用户向后增加的值)]
+// Match value order [(...prepend value), default, (...append value)]
 const DEFAULT_MATCH_RULES = () => {
   let result = {};
   Object.keys(StyleKeys).forEach(key=> {
@@ -17,7 +17,7 @@ const MergeRule = {
   PREPEND: 'prepend'
 }
 
-// {'font-size': ['font']} 默认replace
+// {'font-size': ['font']} default: replace
 // {'font-size': {value: ['font'], mergeRule: 'replace | append | prepend'}}
 const resolveMatchRules = (ruleConfig) => {
   let result = DEFAULT_MATCH_RULES();
@@ -25,14 +25,14 @@ const resolveMatchRules = (ruleConfig) => {
     let mergeRule = MergeRule.REPLACE;
     let mergeValue;
     if(_.isObject(value)) {
-      // 若不存在mergeRule字段，则默认为REPLACE
+      // If the mergeRule field does not exist, the default is REPLACE
       mergeRule = value.mergeRule || MergeRule.REPLACE;
       mergeValue = value.value
     }
     if (_.isArray(value)) {
       mergeValue = value;
     }
-    // 若为其他情况，则不作合并value，value为空数组
+    // In other cases, the value is not merged, and the value is an empty array
     result[key] = mergeRuleConfig(result[key], mergeValue || [], mergeRule);
   })
   return result;
@@ -51,7 +51,7 @@ const mergeRuleConfig = (origin, target, type) => {
   }
 }
 
-// 使用方式
+// How to use
 // resolveMatchRules({
 //   'font-size': ['sss']
 // })

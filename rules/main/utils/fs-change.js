@@ -17,7 +17,13 @@ const isFileChange = (path) => {
 };
 
 const isFilesChange = (filePaths) => {
-  return filePaths.every(path => isFileChange(path));
+  let isChange = true;
+  try {
+    isChange = filePaths.every(path => isFileChange(path));
+  } catch {
+    isChange = true;
+  }
+  return isChange;
 };
 
 module.exports = {

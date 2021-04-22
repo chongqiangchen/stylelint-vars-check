@@ -19,8 +19,8 @@ const messages = ruleMessages(ruleName, {
 });
 
 /**
- * 规则
- * @param inputs :  paths: ['path'], styleType: less | sass, ruleConfig: [] | {value: [], mergeRule}
+ * Stylelint Rule
+ * @param inputs: paths: ['path'], styleType: less | sass, ruleConfig: [] | {value: [], mergeRule}
  */
 function rule(inputs) {
   const { paths, styleType, ruleConfig } = inputs;
@@ -39,7 +39,7 @@ function rule(inputs) {
   }
 
   return (root, result) => {
-    // 检查输入
+    // check input
     const validOptions = validateOptions(result, ruleName, {
       actual: inputs,
       possible: {
@@ -49,7 +49,7 @@ function rule(inputs) {
       }
     });
     if (!validOptions) {
-      console.error('请确认输入参数是否错误');
+      console.error('Please confirm whether the input parameter is wrong?');
       return;
     }
 

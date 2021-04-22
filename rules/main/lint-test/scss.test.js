@@ -2,7 +2,7 @@ const testRule = require('stylelint-test-rule-tape');
 
 const rules = require('../..');
 const rule = rules['main-check'];
-// font测试
+// font test
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [{ paths: ['./test/more.scss'], styleType: 'scss' }, {
@@ -40,7 +40,7 @@ testRule(rule, {
   ]
 })
 
-// background测试
+// background test
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [{ paths: ['./test/more.scss'], styleType: 'scss' }, {
@@ -86,7 +86,7 @@ testRule(rule, {
   ]
 });
 
-// block
+// block test
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [{ paths: ['./test/more.scss'], styleType: 'scss' }, {
@@ -120,7 +120,7 @@ testRule(rule, {
   ]
 });
 
-// box
+// box test
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [{ paths: ['./test/more.scss'], styleType: 'scss' }, {
@@ -150,7 +150,7 @@ testRule(rule, {
   ]
 });
 
-// border
+// border test
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [{ paths: ['./test/more.scss'], styleType: 'scss' }, {
@@ -172,8 +172,7 @@ testRule(rule, {
   ]
 });
 
-
-// // 测试ruleConfig replace方案
+// ruleConfig replace test
 testRule(rule, {
   ruleName: rule.ruleName,
   config: [{ paths: ['./test/more.scss'], styleType: 'scss', ruleConfig: { 'font-size': ['test'] } }, {

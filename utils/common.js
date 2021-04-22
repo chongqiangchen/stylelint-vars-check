@@ -4,14 +4,14 @@ const cleanString = (value) => {
   return value.replace(/\s*/g, '');
 }
 
-const getMsgCnt = (curValue, varConfig) => {
-  return `${curValue} 建议替换成 ${varConfig.key} 变量`
+const getMsgCnt = (curValue, varName) => {
+  return `${curValue} suggest to replace with ${varName} variable`
 }
 
 const generateMoreConfigMsg = (curValue, configs) => {
   if (configs && configs.length !== 0) {
     return configs.reduce((p, q) => {
-      return `${p}${p === '' ? '' : '\n'}${getMsgCnt(curValue, q)}`;
+      return `${p}${p === '' ? '' : '\n'}${getMsgCnt(curValue, q.key)}`;
     }, '');
   }
   return null;
