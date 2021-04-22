@@ -46,7 +46,6 @@ testRule(rule, {
       code: 'a { color: $gray-5; }'
     }
   ],
-
   reject: [
     {
       code: 'a { color: #505050; }',
@@ -59,6 +58,10 @@ testRule(rule, {
     {
       code: 'a { color: green; }',
       message: `${getMsgCnt('green', '$gray-11')} (vars/color-variables)`
+    },
+    {
+      code: 'a {background: linear-gradient(to right, #26b5b8, #26b5b8, #4eddca);}',
+      message: `${getMsgCnt('#26b5b8', '$color-1')} (vars/color-variables)`
     }
   ]
 });

@@ -14,7 +14,7 @@ function resolveValue(curValue, mergeSymbol = ' ') {
   const words = splitWords(curValue);
   const formatWords = words.map(word => {
     if(isKeyword(word)) {
-      return resolveColor(word);
+      return resolveColor(word).matchColor;
     }
     return word;
   })

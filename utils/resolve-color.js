@@ -3,6 +3,7 @@ const keywords = require('css-color-names');
 
 const resolveColor = (color) => {
   let matchColor;
+  let matchOriginColor;
 
   // 取出对应class name中的所有的颜色值
   let matchColors = hexColorRegex().exec(color);
@@ -10,6 +11,7 @@ const resolveColor = (color) => {
   if (matchColors) {
     // 只对第一个进行报错
     matchColor = matchColors[0];
+    matchOriginColor = matchColors[0];
 
     // 匹配是否是#000简写的颜色
     const matchAbbreviationColor = /^#(\d{3})$/.exec(matchColor); // 判断 #000
@@ -18,10 +20,14 @@ const resolveColor = (color) => {
     }
   } else if (keywords.hasOwnProperty(color)) {
     // 匹配类似 blue black white直接单词形容的颜色
+    matchOriginColor = color;
     matchColor = keywords[color];
   }
 
-  return matchColor;
+  return {
+    matchOriginColor,
+    matchColor
+  };
 }
 
 // console.log(resolveColor('#000'));

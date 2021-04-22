@@ -13,9 +13,9 @@ const ruleName = 'vars/color-variables';
 let sassVars;
 
 function getColorWarnMessage(color, colorInfo) {
-  let varName = Object.keys(_.pickBy(colorInfo, value => value === resolveColor(color) || value === color));
+  let varName = Object.keys(_.pickBy(colorInfo, value => value === resolveColor(color).matchColor || value === color));
   if (varName.length) {
-    return getMsgCnt(color, varName);
+    return getMsgCnt(resolveColor(color).matchOriginColor, varName);
   }
   return null;
 }
