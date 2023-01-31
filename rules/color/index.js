@@ -29,7 +29,7 @@ const messages = ruleMessages(ruleName, {
   }
 });
 
-function rule(inputs, secondary, context) {
+function rule(inputs, secondary, context = {}) {
   const { paths, styleType, disableFix } = inputs;
   const parseVarsPath = path.resolve(__dirname, '../../extract-vars.js');
   if (!sassVars || isTestEnv) {
