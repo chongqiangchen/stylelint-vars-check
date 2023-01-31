@@ -97,6 +97,6 @@ const splitWords = (value) => {
   return result;
 };
 
-// splitWords("#fff xxx rgba(0, 0, 0, 0), url('ss') url((0, 0,  0)) linear-gradient(rgba(0, 0, 255, 0.5), rgba(255, 255, 0, 0.5))");
+// console.log(splitWords("#fff xxx rgba(0, 0, 0, 0), url('ss') url((0, 0,  0)) linear-gradient(rgba(0, 0, 255, 0.5), rgba(255, 255, 0, 0.5))"));
 
 module.exports = splitWords;
